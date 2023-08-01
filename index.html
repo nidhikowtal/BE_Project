@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Code2PC and Tx2Code API</title>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      margin-top: 50px;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 600px;
+    }
+
+    label {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      height: 200px;
+      font-size: 18px;
+      margin-bottom: 20px;
+      padding: 10px;
+    }
+
+    button {
+      font-size: 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0069d9;
+    }
+
+    .output {
+      margin-top: 50px;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 600px;
+      font-size: 18px;
+      background-color: #f7f7f7;
+      padding: 20px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Code2PC and Tx2Code API</h1>
+
+  <form id="pseudocode-form">
+    <label for="code">Enter code:</label>
+    <textarea id="code" name="code"></textarea>
+    <button type="submit">Generate Pseudocode</button>
+  </form>
+
+  <form id="code-form">
+    <label for="text">Enter text:</label>
+    <textarea id="text" name="text"></textarea>
+    <button type="submit">Generate Code</button>
+  </form>
+
+  <div id="pseudocode-output" class="output"></div>
+  <div id="code-output" class="output"></div>
+
+  <script>
+    const pseudocodeForm = document.getElementById('pseudocode-form');
+    const codeForm = document.getElementById('code-form');
+    const pseudocodeOutput = document.getElementById('pseudocode-output');
+    const codeOutput = document.getElementById('code-output');
+
+    pseudocodeForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const code = document.getElementById('code').value;
+
+      fetch('http://127.0.0.1:5000/generatePseudocode', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ code })
+      })
+        .then(response => response.json())
+        .then(data => {
+          pseudocodeOutput.innerText = data.pseudocode;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    });
+
+    codeForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const text = document.getElementById('text').value;
+
+      fetch('http://127.0.0.1:5000/generateCode', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text })
+      })
+        .then(response => response.json())
+        .then(data => {
+          codeOutput.innerText = data.code;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    });
+  </script>
+</body>
+
+</html>
